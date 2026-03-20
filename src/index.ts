@@ -5,15 +5,22 @@ import { Env } from "./types";
 import { mcpRoutes } from "./routes/mcp";
 import { apiRoutes } from "./routes/api";
 import { adminRoutes } from "./routes/admin";
+import { authRoutes } from "./routes/auth";
+import { dashboardRoutes } from "./routes/dashboard";
 
 const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", logger());
-app.use("*", cors());
+app.use("*", cors({
+  origin: ["http://localhost:5173", "https://bc-dashboard.pages.dev"],
+  credentials: true,
+}));
 
 app.route("/mcp/v1", mcpRoutes);
 app.route("/api/v1", apiRoutes);
 app.route("/admin/v1", adminRoutes);
+app.route("/auth", authRoutes);
+app.route("/dashboard", dashboardRoutes);
 
 app.get("/", (c) => {
   return c.json({

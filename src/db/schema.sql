@@ -31,3 +31,31 @@ CREATE TABLE IF NOT EXISTS block_keywords (
 
 CREATE INDEX IF NOT EXISTS idx_block_keywords_keyword ON block_keywords(keyword, tenant_id);
 CREATE INDEX IF NOT EXISTS idx_block_keywords_tenant ON block_keywords(tenant_id);
+
+-- Users del dashboard
+CREATE TABLE IF NOT EXISTS users (
+  id TEXT PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'editor',
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+-- Logs de queries MCP
+CREATE TABLE IF NOT EXISTS query_logs (
+  id TEXT PRIMARY KEY,
+  tenant_id TEXT NOT NULL,
+  query TEXT NOT NULL,
+  block_id TEXT,
+  relevance_score REAL,
+  latency_ms INTEGER,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE,
+  FOREIGN KEY (block_id) REFERENCES blocks(id) ON DELETE SET NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_query_logs_tenant ON query_logs(tenant_id);
+CREATE INDEX IF NOT EXISTS idx_query_logs_created ON query_logs(created_at);

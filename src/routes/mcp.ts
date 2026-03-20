@@ -22,6 +22,7 @@ app.use("*", async (c, next) => {
 });
 
 app.post("/query", zValidator("json", QuerySchema), async (c) => {
+  const startTime = performance.now();
   const { query } = c.req.valid("json");
   const auth = c.get("auth");
 
@@ -58,7 +59,17 @@ app.post("/query", zValidator("json", QuerySchema), async (c) => {
       match_count: number;
     }>();
 
+  const latencyMs = Math.round(performance.now() - startTime);
+
   if (!results) {
+    c.executionCtx.waitUntil(
+      c.env.DB.prepare(
+        "INSERT INTO query_logs (id, tenant_id, query, latency_ms, created_at) VALUES (?, ?, ?, ?, ?)"
+      )
+        .bind(crypto.randomUUID(), auth.tenant_id, query, latencyMs, new Date().toISOString())
+        .run()
+        .catch(() => {})
+    );
     return c.json({ error: "No matching block found" }, 404);
   }
 
@@ -73,6 +84,15 @@ app.post("/query", zValidator("json", QuerySchema), async (c) => {
   };
 
   const relevanceScore = Math.min(results.match_count / keywords.length, 1);
+
+  c.executionCtx.waitUntil(
+    c.env.DB.prepare(
+      "INSERT INTO query_logs (id, tenant_id, query, block_id, relevance_score, latency_ms, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)"
+    )
+      .bind(crypto.randomUUID(), auth.tenant_id, query, results.id, relevanceScore, latencyMs, new Date().toISOString())
+      .run()
+      .catch(() => {})
+  );
 
   return c.json({
     block,
