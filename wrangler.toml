@@ -1,0 +1,30 @@
+name = "bc"
+main = "src/index.ts"
+compatibility_date = "2024-11-27"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bc-db"
+database_id = "9d54062d-fe6f-4acd-bd7c-71dc8ca16423"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "362233ef245743dbb1341c5bd92ddd4f"
+
+[vars]
+ENVIRONMENT = "development"
+
+[env.production]
+name = "bc-prod"
+d1_databases = [
+  { binding = "DB", database_name = "bc-db-prod", database_id = "9d54062d-fe6f-4acd-bd7c-71dc8ca16423" }
+]
+kv_namespaces = [
+  { binding = "CACHE", id = "362233ef245743dbb1341c5bd92ddd4f" }
+]
+[env.production.vars]
+ENVIRONMENT = "production"
