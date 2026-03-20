@@ -12,7 +12,13 @@ const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", logger());
 app.use("*", cors({
-  origin: ["http://localhost:5173", "https://bc-dashboard.pages.dev"],
+  origin: [
+    "http://localhost:5173",
+    "https://bc-dashboard.pages.dev",
+    "https://bc-dashboard-1i3.pages.dev",
+    "https://master.bc-dashboard-1i3.pages.dev",
+    /\.pages\.dev$/,
+  ],
   credentials: true,
 }));
 
