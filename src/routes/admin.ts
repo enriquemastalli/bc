@@ -1,20 +1,12 @@
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
 import { Env, CreateTenantSchema } from "../types";
+import { dashboardAuthMiddleware, requireAdmin } from "../middleware/auth";
 
 const app = new Hono<{ Bindings: Env }>();
 
-app.use("*", async (c, next) => {
-  const authHeader = c.req.header("Authorization");
-  if (!authHeader?.startsWith("Bearer ")) {
-    return c.json({ error: "Unauthorized: Missing admin API key" }, 401);
-  }
-  const apiKey = authHeader.slice(7);
-  if (apiKey !== c.env.ADMIN_API_KEY) {
-    return c.json({ error: "Unauthorized: Invalid admin API key" }, 401);
-  }
-  return next();
-});
+app.use("*", dashboardAuthMiddleware);
+app.use("*", requireAdmin);
 
 app.post("/tenants", zValidator("json", CreateTenantSchema), async (c) => {
   const data = c.req.valid("json");
@@ -44,6 +36,14 @@ app.get("/tenants", async (c) => {
   const results = await c.env.DB.prepare(
     "SELECT id, name, created_at, updated_at FROM tenants ORDER BY created_at DESC"
   ).all<{ id: string; name: string; created_at: string; updated_at: string }>();
+
+  return c.json({ tenants: results.results ?? [] });
+});
+
+app.get("/tenants-with-keys", async (c) => {
+  const results = await c.env.DB.prepare(
+    "SELECT id, name, api_key, created_at, updated_at FROM tenants ORDER BY created_at DESC"
+  ).all<{ id: string; name: string; api_key: string; created_at: string; updated_at: string }>();
 
   return c.json({ tenants: results.results ?? [] });
 });

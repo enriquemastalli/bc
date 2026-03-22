@@ -102,7 +102,7 @@ class ApiClient {
 
   // Tenants
   async getTenants(): Promise<{ tenants: Tenant[] }> {
-    return this.fetch("/admin/v1/tenants");
+    return this.fetch("/admin/v1/tenants-with-keys");
   }
 
   async createTenant(name: string): Promise<Tenant> {

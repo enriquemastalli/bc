@@ -52,7 +52,7 @@ export async function dashboardAuthMiddleware(c: Context<{ Bindings: Env; Variab
   }
 }
 
-export function requireAdmin(c: Context<{ Variables: { user: DashboardAuthContext } }>, next: Next) {
+export async function requireAdmin(c: Context<{ Variables: { user: DashboardAuthContext } }>, next: Next) {
   const user = c.get("user");
   
   if (user.role !== "admin") {

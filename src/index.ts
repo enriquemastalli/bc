@@ -19,6 +19,7 @@ app.use("*", cors({
     "https://bc-dashboard-1i3.pages.dev",
     "https://8d1d1d8d.bc-dashboard-1i3.pages.dev",
     "https://939f2f93.bc-dashboard-1i3.pages.dev",
+    "https://9901bc96.bc-dashboard-1i3.pages.dev",
     "https://master.bc-dashboard-1i3.pages.dev",
   ],
   credentials: true,
