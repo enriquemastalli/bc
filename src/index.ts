@@ -14,10 +14,11 @@ app.use("*", logger());
 app.use("*", cors({
   origin: [
     "http://localhost:5173",
+    "http://localhost:4173",
     "https://bc-dashboard.pages.dev",
     "https://bc-dashboard-1i3.pages.dev",
+    "https://8d1d1d8d.bc-dashboard-1i3.pages.dev",
     "https://master.bc-dashboard-1i3.pages.dev",
-    /\.pages\.dev$/,
   ],
   credentials: true,
 }));
