@@ -7,6 +7,7 @@ import { DashboardPage } from "./pages/Dashboard";
 import { TenantsPage } from "./pages/Tenants";
 import { BlocksPage } from "./pages/Blocks";
 import { LogsPage } from "./pages/Logs";
+import { ConfigPage } from "./pages/Config";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ function AppRoutes() {
         <Route path="tenants" element={<TenantsPage />} />
         <Route path="blocks" element={<BlocksPage />} />
         <Route path="logs" element={<LogsPage />} />
+        <Route path="config" element={<ConfigPage />} />
       </Route>
     </Routes>
   );

@@ -9,7 +9,8 @@ import {
   Search, 
   LogOut,
   Menu,
-  X
+  X,
+  Settings
 } from "lucide-react";
 import { useState } from "react";
 
@@ -22,6 +23,7 @@ export function Layout() {
     { path: "/tenants", label: "Tenants", icon: Building2 },
     { path: "/blocks", label: "Bloques", icon: FileText },
     { path: "/logs", label: "Logs", icon: Search },
+    { path: "/config", label: "API", icon: Settings },
   ];
 
   return (
